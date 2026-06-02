@@ -11,19 +11,21 @@
  */
 export default {
   async fetch(req, env) {
+    // El repo NO es secreto → va fijo en el código (evita problemas de variables).
+    const REPO = env.GH_REPO || 'upocuantitativo/corrector-examenes-datos';
     if (req.method === 'OPTIONS') return cors(new Response(null, { status: 204 }));
     // Diagnóstico (GET): comprueba configuración SIN revelar el token
     if (req.method === 'GET') {
       let repoStatus = null;
       try {
-        const rr = await fetch(`https://api.github.com/repos/${env.GH_REPO}`, {
+        const rr = await fetch(`https://api.github.com/repos/${REPO}`, {
           headers: { 'Authorization': `Bearer ${env.GH_TOKEN}`, 'User-Agent': 'corrector-diag', 'Accept': 'application/vnd.github+json' },
         });
         repoStatus = rr.status;
       } catch (e) { repoStatus = 'fetch-error'; }
       return cors(json({
         ok: true,
-        gh_repo: env.GH_REPO || '(NO DEFINIDO)',
+        gh_repo: REPO,
         token_presente: !!env.GH_TOKEN,
         token_longitud: (env.GH_TOKEN || '').length,
         api_key_presente: !!env.API_KEY,
@@ -42,7 +44,7 @@ export default {
     const label = ['a', 'b', 'c', 'blank', 'void'].includes(s.label) ? s.label : 'blank';
     const slim = { scores: s.scores.map(Number), label, examId: s.examId || null, ts: Date.now() };
     const path = `samples/auto/${slim.ts}-${Math.random().toString(36).slice(2, 8)}.json`;
-    const url = `https://api.github.com/repos/${env.GH_REPO}/contents/${path}`;
+    const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(slim))));
     const r = await fetch(url, {
       method: 'PUT',
