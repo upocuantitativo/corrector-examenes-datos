@@ -12,6 +12,24 @@
 export default {
   async fetch(req, env) {
     if (req.method === 'OPTIONS') return cors(new Response(null, { status: 204 }));
+    // Diagnóstico (GET): comprueba configuración SIN revelar el token
+    if (req.method === 'GET') {
+      let repoStatus = null;
+      try {
+        const rr = await fetch(`https://api.github.com/repos/${env.GH_REPO}`, {
+          headers: { 'Authorization': `Bearer ${env.GH_TOKEN}`, 'User-Agent': 'corrector-diag', 'Accept': 'application/vnd.github+json' },
+        });
+        repoStatus = rr.status;
+      } catch (e) { repoStatus = 'fetch-error'; }
+      return cors(json({
+        ok: true,
+        gh_repo: env.GH_REPO || '(NO DEFINIDO)',
+        token_presente: !!env.GH_TOKEN,
+        token_longitud: (env.GH_TOKEN || '').length,
+        api_key_presente: !!env.API_KEY,
+        acceso_al_repo_status: repoStatus,
+      }));
+    }
     if (req.method !== 'POST') return cors(json({ error: 'usa POST' }, 405));
     if (env.API_KEY && req.headers.get('x-api-key') !== env.API_KEY)
       return cors(json({ error: 'no autorizado' }, 401));
