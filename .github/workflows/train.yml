@@ -1,20 +1,16 @@
 name: Entrenar modelo
-
-# Reentrena cuando llegan ejemplos nuevos, a mano, o cada día de madrugada.
 on:
   push:
-    paths: ["samples/**"]
-  workflow_dispatch: {}
+    paths:
+      - "samples/**"
+  workflow_dispatch:
   schedule:
     - cron: "0 3 * * *"
-
 permissions:
   contents: write
-
 concurrency:
   group: train
   cancel-in-progress: true
-
 jobs:
   train:
     runs-on: ubuntu-latest
