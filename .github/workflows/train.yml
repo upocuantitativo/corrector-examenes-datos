@@ -1,0 +1,37 @@
+name: Entrenar modelo
+
+  on:
+    push:
+      paths: ["samples/**"]
+    workflow_dispatch: {}
+    schedule:
+      - cron: "0 3 * * *"
+
+  permissions:
+    contents: write
+
+  concurrency:
+    group: train
+    cancel-in-progress: true
+
+  jobs:
+    train:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-python@v5
+          with:
+            python-version: "3.12"
+        - run: pip install -r requirements.txt
+        - run: python train.py
+        - name: Publicar model.json
+          run: |
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add model.json
+            if git diff --staged --quiet; then
+              echo "Sin cambios en el modelo."
+            else
+              git commit -m "Reentrenar modelo [skip ci]"
+              git push
+            fi
