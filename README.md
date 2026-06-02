@@ -1,5 +1,17 @@
 # Corrector de Exámenes — datos y modelo (Fase 2)
 
+> ⚙️ **FALTA UN PASO (1 vez): activar el entrenamiento automático.**
+> El workflow no pudo subirse automáticamente (falta de permiso). Actívalo así
+> (elige UNA opción):
+> - **Web (fácil):** pestaña **Actions** → *set up a workflow yourself* → borra el
+>   ejemplo y **pega el contenido de [`ACCION_GITHUB_train.yml`](ACCION_GITHUB_train.yml)** →
+>   guarda como `.github/workflows/train.yml` (Commit). Listo.
+> - **Terminal:** `gh auth refresh -s workflow` y luego
+>   `mkdir -p .github/workflows && cp ACCION_GITHUB_train.yml .github/workflows/train.yml && git add . && git commit -m "workflow" && git push`.
+>
+> Mientras tanto puedes reentrenar a mano: `pip install -r requirements.txt && python train.py`.
+
+
 Pipeline de aprendizaje del [Corrector de Exámenes](https://github.com/upocuantitativo/corrector-examenes).
 La app (PWA/APK) recoge ejemplos cuando el profesor resuelve dudas; aquí se
 **entrena un modelo ligero** que la app descarga para tener **cada vez menos
