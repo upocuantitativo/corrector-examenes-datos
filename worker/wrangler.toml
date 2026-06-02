@@ -1,0 +1,9 @@
+name = "corrector-examenes-ingest"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+# Variable pública (no secreta). El token y la API key van como SECRETS:
+#   npx wrangler secret put GH_TOKEN
+#   npx wrangler secret put API_KEY
+[vars]
+GH_REPO = "upocuantitativo/corrector-examenes-datos"
