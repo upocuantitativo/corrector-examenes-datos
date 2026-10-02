@@ -1,6 +1,6 @@
 {
-  "version": 1790847468,
-  "trained_at": "2026-10-01T09:37:48.560662+00:00Z",
+  "version": 1790932302,
+  "trained_at": "2026-10-02T09:11:42.927112+00:00Z",
   "type": "heuristic",
   "n_samples": 0,
   "note": "pocos datos: la app usa su heurística por defecto"
